@@ -103,7 +103,12 @@ func RunSession(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "another session is in progress", 400)
 		return
 	}
+	
+	session = getSession(r.Body)
+	go runSession(session)
+}
 
+func getSession(body string) {
 	session := Session{}
 
 	decoder := json.NewDecoder(r.Body)
@@ -112,10 +117,11 @@ func RunSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	go runSession(session)
+	return session
 }
 
 func GetReport(w http.ResponseWriter, r *http.Request) {
+	session = getSession(r.Body)
 	log.Println("AMOUNT: ", len(session.DurationSteps))
 
 	f, err := os.Open(reportPath)
