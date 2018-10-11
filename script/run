@@ -10,7 +10,7 @@ session = {
   targets:        config["targets"],
   duration:       config["duration"],
   rate:           config["rate"],
-  use_steps:      config["use_steps"],
+  useSteps:      config["useSteps"],
   duration_steps: config["duration_steps"],
   rate_steps:     config["rate_steps"]
 }
