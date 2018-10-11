@@ -9,8 +9,6 @@ import (
 	"os"
 	"os/exec"
 	"strings"
-	"regexp"
-	"strconv"
 )
 
 type Session struct {
@@ -59,14 +57,14 @@ func runSession(session Session) {
 		for i := 1; i < len(session.DurationSteps); i++ {
 			duration := session.DurationSteps[i]
 			rate := session.RateSteps[i]
-			runCommand(rate, duration)
+			runCommand(rate, duration, session.Targets)
 		}
 	} else {
-		runCommand(session.Rate, session.Duration)
+		runCommand(session.Rate, session.Duration, session.Targets)
 	}
 }
 
-func runCommand(rate string, duration string) {
+func runCommand(rate string, duration string, targets string) {
 	opts := []string{
 		"attack",
 		"-timeout=10s",
@@ -78,7 +76,7 @@ func runCommand(rate string, duration string) {
 	cmd := exec.Command(vegetaPath, opts...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	cmd.Stdin = strings.NewReader(session.Targets)
+	cmd.Stdin = strings.NewReader(string)
 
 	if err := cmd.Start(); err != nil {
 		log.Println("unable to start vegeta command:", err)
