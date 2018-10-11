@@ -26,10 +26,9 @@ type Session struct {
 	Rate string `json:"rate"`
 
 	// Execute by steps until reach the rate
-	BySteps bool `json:"by_steps"`
-
-	// Execute by steps until reach the rate
-	StepsAmount int `json:"steps_amount"`
+	UseSteps bool `json:"use_steps"`
+	DurationSteps []string `json:"duration_steps"`
+	RateSteps []string `json:"rate_steps"`
 }
 
 var (
@@ -56,17 +55,11 @@ func runSession(session Session) {
 	// Remove an existing report file if it exists
 	os.Remove(reportPath)
 
-	if session.BySteps == nil {
-		durationTotal := extractNumber(session.Duration)
-		durationTimeUnit := extractString(session.Duration)
-
-		rateTotal := extractNumber(session.Rate)
-		rateIncByStep := int(rateTotal/session.StepsAmount)
-
-		step := 0
-		sessionRate := session.Rate
-		for i := 1; i <= session.StepsAmount; i++ {
-			sum += i
+	if session.UseSteps == true {
+		for i := 1; i < len(session.DurationSteps); i++ {
+			duration := session.DurationSteps[i]
+			rate := session.RateSteps[i]
+			runCommand(rate, duration)
 		}
 	} else {
 		runCommand(session.Rate, session.Duration)
