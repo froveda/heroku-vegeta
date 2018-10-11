@@ -98,13 +98,13 @@ func runCommand(rate string, duration string, targets string) {
 	}
 }
 
-func RunSession(w http.ResponseWriter, r *http.Request) {
+func RunSession {
 	if state == "working" {
 		http.Error(w, "another session is in progress", 400)
 		return
 	}
 	
-	session := go getSession(w,r)
+	session := getSession()
 	go runSession(session)
 }
 
@@ -120,8 +120,8 @@ func getSession(w http.ResponseWriter, r *http.Request) {
 	return session
 }
 
-func GetReport(w http.ResponseWriter, r *http.Request) {
-	session := getSession(w,r)
+func GetReport {
+	session := getSession()
 	log.Println("AMOUNT: ", len(session.DurationSteps))
 
 	f, err := os.Open(reportPath)
