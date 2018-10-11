@@ -104,7 +104,7 @@ func RunSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	
-	session = getSession(r.Body)
+	session := getSession(r.Body)
 	go runSession(session)
 }
 
@@ -121,7 +121,7 @@ func getSession(body string) {
 }
 
 func GetReport(w http.ResponseWriter, r *http.Request) {
-	session = getSession(r.Body)
+	session := getSession(r.Body)
 	log.Println("AMOUNT: ", len(session.DurationSteps))
 
 	f, err := os.Open(reportPath)
