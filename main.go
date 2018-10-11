@@ -25,7 +25,11 @@ type Session struct {
 
 	// Execute by steps until reach the rate
 	UseSteps bool `json:"use_steps"`
+
+	// Array of duration steps
 	DurationSteps []string `json:"duration_steps"`
+
+	// Array of rate steps
 	RateSteps []string `json:"rate_steps"`
 }
 
