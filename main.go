@@ -76,7 +76,7 @@ func runCommand(rate string, duration string, targets string) {
 	cmd := exec.Command(vegetaPath, opts...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	cmd.Stdin = strings.NewReader(string)
+	cmd.Stdin = strings.NewReader(targets)
 
 	if err := cmd.Start(); err != nil {
 		log.Println("unable to start vegeta command:", err)
