@@ -50,10 +50,17 @@ loop do
 end
 
 puts "Test finished, downloading results"
-`mkdir -p #{base_dir}`
+
+step_count = config["duration_steps"].size - 1 rescue 0
+
+`mkdir -p #{base_dir}`  
 endpoints.each_with_index do |url, i|
-  `curl -s -o #{base_dir}/report-#{i} #{url}/report`
+  0.upto(step_count) do |step_number|
+    `curl -s -o #{base_dir}/report-#{i}-#{step_number} #{url}/report?report_number=#{step_number}`
+  end
 end
+
+raise 'bla'
 
 inputs = Dir["#{base_dir}/report-*"].join(",")
 result1 = `./bin/vegeta_osx report -inputs=#{inputs}`

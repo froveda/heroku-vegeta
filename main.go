@@ -54,35 +54,41 @@ func runSession(session Session) {
 		log.Println("session is finished")
 	}()
 
-	// Remove an existing report file if it exists
-	os.Remove(reportPath)
+	// Remove an existing report files if it exists
+	files, err := filepath.Glob("/tmp/vegeta*")
+	if err != nil {
+	    panic(err)
+	}
 
-	log.Println("UseSteps: ", session.UseSteps)
-	log.Println("DurationSteps: ", session.DurationSteps)
-	log.Println("RateSteps: ", session.RateSteps)
+	for _, f := range files {
+	    if err := os.Remove(f); err != nil {
+	        panic(err)
+	    }
+	}
 
 	if session.UseSteps == true {
 		for i := 0; i < len(session.DurationSteps); i++ {
 			log.Println("Run step: ", i + 1)
 			duration := session.DurationSteps[i]
 			rate := session.RateSteps[i]
-			runCommand(rate, duration, session.Targets)
+			runCommand(rate, duration, session.Targets, i)
 		}
 	} else {
 		log.Println("Run once")
-		runCommand(session.Rate, session.Duration, session.Targets)
+		runCommand(session.Rate, session.Duration, session.Targets, 0)
 	}
 }
 
-func runCommand(rate string, duration string, targets string) {
+func runCommand(rate string, duration string, targets string, fileNumber int) {
 	opts := []string{
 		"attack",
 		"-timeout=10s",
 		"-rate=" + rate,
 		"-duration=" + duration,
-		"-output", reportPath,
+		"-output", reportPath + fileNumber,
 	}
-		// Setup vegeta runner
+
+	// Setup vegeta runner
 	cmd := exec.Command(vegetaPath, opts...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -116,19 +122,12 @@ func RunSession(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetReport(w http.ResponseWriter, r *http.Request) {
-	session := Session{}
+	reportNumber, err := strconv.Atoi(r.URL.Query().Get("report_number"))
+    if err == nil {
+        reportNumber := 0
+    }
 
-	decoder := json.NewDecoder(r.Body)
-	if err := decoder.Decode(&session); err != nil {
-		http.Error(w, err.Error(), 400)
-		return
-	}
-
-	log.Println("UseSteps 1: ", session.UseSteps)
-	log.Println("DurationSteps 1: ", session.DurationSteps)
-	log.Println("RateSteps 1: ", session.RateSteps)
-
-	f, err := os.Open(reportPath)
+	f, err := os.Open(reportPath + fileNumber)
 	if err != nil {
 		http.Error(w, err.Error(), 400)
 		return
