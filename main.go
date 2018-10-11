@@ -54,12 +54,15 @@ func runSession(session Session) {
 	os.Remove(reportPath)
 
 	if session.UseSteps == true {
+		
 		for i := 1; i < len(session.DurationSteps); i++ {
+			log.Println("Run step: ", i)
 			duration := session.DurationSteps[i]
 			rate := session.RateSteps[i]
 			runCommand(rate, duration, session.Targets)
 		}
 	} else {
+		log.Println("Run once")
 		runCommand(session.Rate, session.Duration, session.Targets)
 	}
 }
