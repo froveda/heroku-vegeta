@@ -125,7 +125,7 @@ func RunSession(w http.ResponseWriter, r *http.Request) {
 
 func GetReport(w http.ResponseWriter, r *http.Request) {
 	reportNumber, err := strconv.Atoi(r.URL.Query().Get("report_number"))
-	fmt.Println('REPORT NUMBER: ' + r.URL.Query().Get("report_number"))
+	fmt.Println("REPORT NUMBER: " + r.URL.Query().Get("report_number"))
     if err != nil {
         reportNumber = 0
     }
