@@ -9,6 +9,8 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"regexp"
+	"strconv"
 )
 
 type Session struct {
@@ -22,6 +24,12 @@ type Session struct {
 
 	// Number of requests per second per node
 	Rate string `json:"rate"`
+
+	// Execute by steps until reach the rate
+	BySteps bool `json:"by_steps"`
+
+	// Execute by steps until reach the rate
+	StepsAmount int `json:"steps_amount"`
 }
 
 var (
@@ -48,15 +56,32 @@ func runSession(session Session) {
 	// Remove an existing report file if it exists
 	os.Remove(reportPath)
 
+	if session.BySteps == nil {
+		durationTotal := extractNumber(session.Duration)
+		durationTimeUnit := extractString(session.Duration)
+
+		rateTotal := extractNumber(session.Rate)
+		rateIncByStep := int(rateTotal/session.StepsAmount)
+
+		step := 0
+		sessionRate := session.Rate
+		for i := 1; i <= session.StepsAmount; i++ {
+			sum += i
+		}
+	} else {
+		runCommand(session.Rate, session.Duration)
+	}
+}
+
+func runCommand(rate String, duration String) {
 	opts := []string{
 		"attack",
 		"-timeout=10s",
-		"-rate=" + session.Rate,
-		"-duration=" + session.Duration,
+		"-rate=" + rate,
+		"-duration=" + duration,
 		"-output", reportPath,
 	}
-
-	// Setup vegeta runner
+		// Setup vegeta runner
 	cmd := exec.Command(vegetaPath, opts...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -70,6 +95,22 @@ func runSession(session Session) {
 	if err := cmd.Wait(); err != nil {
 		log.Println("command exited:", err)
 	}
+}
+
+func extractNumber(duration String) {
+	numberRegex := regexp.MustCompile("[0-9]+")
+	numberExtracted, err := strconv.Atoi(numberRegex.FindString(duration))
+	if err != nil {
+		log.Println("Unable to convert duration to number:", err)
+		return
+	}
+
+	return numberExtracted
+}
+
+func extractString(duration String) {
+	stringRegex := regexp.MustCompile("[a-z]+")
+	return stringRegex.FindString(duration)
 }
 
 func RunSession(w http.ResponseWriter, r *http.Request) {
