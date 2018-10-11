@@ -79,13 +79,13 @@ func runSession(session Session) {
 	}
 }
 
-func runCommand(rate string, duration string, targets string, fileNumber int) {
+func runCommand(rate string, duration string, targets string, reportNumber int) {
 	opts := []string{
 		"attack",
 		"-timeout=10s",
 		"-rate=" + rate,
 		"-duration=" + duration,
-		"-output", reportPath + fileNumber,
+		"-output", reportPath + strconv.Itoa(reportNumber),
 	}
 
 	// Setup vegeta runner
@@ -127,7 +127,7 @@ func GetReport(w http.ResponseWriter, r *http.Request) {
         reportNumber := 0
     }
 
-	f, err := os.Open(reportPath + fileNumber)
+	f, err := os.Open(reportPath + strconv.Itoa(reportNumber))
 	if err != nil {
 		http.Error(w, err.Error(), 400)
 		return
