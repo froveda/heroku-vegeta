@@ -10,6 +10,7 @@ import (
 	"os/exec"
 	"strings"
 	"strconv"
+	"path/filepath"
 )
 
 type Session struct {
@@ -56,7 +57,7 @@ func runSession(session Session) {
 	}()
 
 	// Remove an existing report files if it exists
-	files, err := filepath.Glob(reportPath)
+	files, err := filepath.Glob(reportPath + "*")
 	if err != nil {
 	    panic(err)
 	}
