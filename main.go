@@ -57,7 +57,9 @@ func runSession(session Session) {
 	// Remove an existing report file if it exists
 	os.Remove(reportPath)
 
-	log.Println("UseSteps: ", session.DurationSteps)
+	log.Println("UseSteps: ", session.UseSteps)
+	log.Println("DurationSteps: ", session.DurationSteps)
+	log.Println("RateSteps: ", session.RateSteps)
 
 	if session.UseSteps == true {
 		for i := 1; i < len(session.DurationSteps); i++ {
