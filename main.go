@@ -56,7 +56,7 @@ func runSession(session Session) {
 	}()
 
 	// Remove an existing report files if it exists
-	files, err := filepath.Glob("/tmp/vegeta*")
+	files, err := filepath.Glob(reportPath + "*")
 	if err != nil {
 	    panic(err)
 	}
