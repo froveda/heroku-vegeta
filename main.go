@@ -62,8 +62,8 @@ func runSession(session Session) {
 	log.Println("RateSteps: ", session.RateSteps)
 
 	if session.UseSteps == true {
-		for i := 1; i < len(session.DurationSteps); i++ {
-			log.Println("Run step: ", i)
+		for i := 0; i < len(session.DurationSteps); i++ {
+			log.Println("Run step: ", i + 1)
 			duration := session.DurationSteps[i]
 			rate := session.RateSteps[i]
 			runCommand(rate, duration, session.Targets)
