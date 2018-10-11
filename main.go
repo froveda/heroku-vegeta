@@ -24,7 +24,7 @@ type Session struct {
 	Rate string `json:"rate"`
 
 	// Execute by steps until reach the rate
-	UseSteps bool `json:"useSteps"`
+	UseSteps bool `json:"use_steps"`
 
 	// Array of duration steps
 	DurationSteps []string `json:"duration_steps"`
@@ -57,7 +57,7 @@ func runSession(session Session) {
 	// Remove an existing report file if it exists
 	os.Remove(reportPath)
 
-	log.Println("UseSteps: ", UseSteps)
+	log.Println("UseSteps: ", session.UseSteps)
 
 	if session.UseSteps == true {
 		for i := 1; i < len(session.DurationSteps); i++ {
