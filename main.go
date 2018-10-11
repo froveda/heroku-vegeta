@@ -116,6 +116,8 @@ func RunSession(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetReport(w http.ResponseWriter, r *http.Request) {
+	log.Println("AMOUNT: ", len(session.DurationSteps))
+
 	f, err := os.Open(reportPath)
 	if err != nil {
 		http.Error(w, err.Error(), 400)
