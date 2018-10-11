@@ -104,7 +104,7 @@ func RunSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	
-	session := getSession(w,r)
+	session := go getSession(w,r)
 	go runSession(session)
 }
 
