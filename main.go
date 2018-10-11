@@ -66,7 +66,7 @@ func runSession(session Session) {
 	}
 }
 
-func runCommand(rate String, duration String) {
+func runCommand(rate string, duration string) {
 	opts := []string{
 		"attack",
 		"-timeout=10s",
@@ -88,22 +88,6 @@ func runCommand(rate String, duration String) {
 	if err := cmd.Wait(); err != nil {
 		log.Println("command exited:", err)
 	}
-}
-
-func extractNumber(duration String) {
-	numberRegex := regexp.MustCompile("[0-9]+")
-	numberExtracted, err := strconv.Atoi(numberRegex.FindString(duration))
-	if err != nil {
-		log.Println("Unable to convert duration to number:", err)
-		return
-	}
-
-	return numberExtracted
-}
-
-func extractString(duration String) {
-	stringRegex := regexp.MustCompile("[a-z]+")
-	return stringRegex.FindString(duration)
 }
 
 func RunSession(w http.ResponseWriter, r *http.Request) {
