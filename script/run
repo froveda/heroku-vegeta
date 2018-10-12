@@ -60,8 +60,6 @@ endpoints.each_with_index do |url, i|
   end
 end
 
-raise 'bla'
-
 inputs = Dir["#{base_dir}/report-*"].join(",")
 result1 = `./bin/vegeta_osx report -inputs=#{inputs}`
 result2 = `./bin/vegeta_osx report -inputs=#{inputs} -reporter=hist[0,100ms,200ms,300ms,400ms,500ms]`
